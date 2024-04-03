@@ -64,7 +64,7 @@ public class dFindMediumOfASCArray {
          * 最终结果就是分割线左边元素的最大值；或者偶数情况就是分割线左边元素的最大值以及右边元素的最小值和除2
          * https://leetcode.cn/problems/median-of-two-sorted-arrays/
          */
-        // 先使得数组一的长度是较短的数组，因为如果这样，那么下边数组二的分割线就不会有边界的情况，
+        // 先使得数组一的长度是较短的数组，因为如果这样，那么下边数组二的分割线就不会有边界的情况(因为之和num2[j]比，不会j-1)，而且效率高
         // 如果i=0，那么j一定是一半但是nums2长度大于一半，如果i就是nums1.length，那么j也不会是0因为第一个数组比第二个短
         if (nums1.length > nums2.length){
             int[] temp = nums1;
@@ -80,6 +80,7 @@ public class dFindMediumOfASCArray {
         int left = 0;
         int right = m;
         while (left < right){
+            // 折半
             int i = left + (right - left + 1) / 2;
             int j = totalLeft - i;
             // 如果不符合分割线左边元素都要小于分割线右边元素，那就继续二分查找
