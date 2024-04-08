@@ -21,6 +21,7 @@ public class gIntegerConvert {
     public static void main(String[] args) {
         int  x = 123;
 //        System.out.println(-123 % 10);
+//        System.out.println(String.valueOf(x).re);
         int result = reverse(x);
         System.out.println(result);
     }
@@ -50,7 +51,7 @@ public class gIntegerConvert {
 
         /**
          * 方法2. O(LogN)或者O(1)
-         * 也可以直接用String.valueOf(x).reverse()，但是要注意溢出的情况，
+         * 也可以直接用String.valueOf(x).reverse()，但是要注意溢出的情况，但是好像没有.reverse()方法
          * 先反转后判断位数是否超过最大值位数，是则return，
          * 然后再判断是否小于最大位数，是的话就可以反转
          * 如果相等，那仍要逐位判断
