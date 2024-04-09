@@ -40,7 +40,7 @@ public class tRegexMatch {
     public static boolean isMatch(String s, String p) {
         // eg: s=abcdefg, p=abd*cdq*e.g，结果是true
         // eg: s=abbbbcd, p=ab*q*c. 结果也是true
-        /**
+        /** O(mn) m和n表示s与p的长度
          * 使用动态规划方法， dp[i][j]表示s[i-1]之前字符和p[j-1]之前的内容是否匹配，因为数组下标会-1，所以当前要-1
          * 1： 如果p[j-1]不是*，那么 s[i-1] == p[j-1] && dp[i][j] = dp[i-1][j-1] ，
          *    表示当前如果不是*并且当前字符s[i-1]与p[j-1]相同，那就看之前的内容是否也匹配
@@ -64,8 +64,11 @@ public class tRegexMatch {
         int n = p.length();
         boolean[][] f = new boolean[m + 1][n + 1];
         f[0][0] = true; //如果都为空那肯定就匹配
-        // f[m][n]是结果，是推算出来的，表示的是0-m-1这m个 与 0-n-1这n个之间的字符串是否匹配
-        // i从0开始，是因为0直接利用一次循环，0开头的全为false，代表的是s[-1]
+        // f[m][n]表示的是0-m-1这m个 与 0-n-1这n个之间的字符串是否匹配
+        // i必须要从0开始，作用是考虑s为空的时候，p不为空的时候能不能正常匹配，如果是a*b*这种，依然可以匹配，因为*认为0次即可。
+        // 注意看下面代码，虽然matches方法i==0的时候直接return false，但是p.charAt(j - 1) == '*'还是可以f[i][j] = f[i][j - 2];的
+        // 同时也可以认为是s不为空但是p的前x个字符可以直接忽略，比如s[0]的时候，p从5才开始匹配上，前面的都空掉，再加上 f[0][0] = true，这样才完整。
+        // 比如s="aab", p="c*a*b"，如果i从0开始，那么结果为false，反之为true，就是因为f[0][j]也需要仔细赋值，看p前j个字符是否可以无视，不然从1开始直接false会影响
         for (int i = 0; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
                 if (p.charAt(j - 1) == '*'){
