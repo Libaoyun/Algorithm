@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * 10、 正则表达式匹配(困难)
  * 给你一个字符串 s 和一个字符规律 p，请你来实现一个支持 '.' 和 '*' 的正则表达式匹配。
@@ -21,49 +23,59 @@
  * 保证每次出现字符 * 时，前面都匹配到有效的字符
  *
  */
+
 public class tRegexMatch {
     public static void main(String[] args) {
         String s = "aa";
         String p = "a*";
-        Boolean result = isMatch("abbbbcd", "ab*bq*c.");
+//        Boolean result = isMatch("abbbbcd", "ab*bq*c.");
+        Boolean result = isMatch("aab", "c*a*b");
         System.out.println(result);
     }
 
     /**
      * s = abcdefg,   p = abc*de*
+     * 参考：https://leetcode.cn/problems/regular-expression-matching/solutions/296114/shou-hui-tu-jie-wo-tai-nan-liao-by-hyj8/
      */
     public static boolean isMatch(String s, String p) {
         // eg: s=abcdefg, p=abd*cdq*e.g，结果是true
         // eg: s=abbbbcd, p=ab*q*c. 结果也是true
         /**
-         * 使用动态规划方法，dp[i][j]表示s[i]之前字符和p[j]之前的内容是否匹配
-         * 1： 如果p[j]不是*，那么dp[i][j] = dp[i-1][j-1] && s[i] == p[j]，
-         *    表示当前如果不是*并且当前字符与s[i]与p[j]相同，那就看之前的内容是否也匹配
-         * 2: 如果p[j]是*，那要考虑：
-         *    2.1: *匹配0个字符的情况：
-         *          既可以考虑s[i]与p[j-2]，即是否与星号前的字符匹配；
-         *         也可以考虑s[i-1]与p[j]，表示跳过p的*与前一个字符，将s回退一格再匹配是否与p[j]匹配，比如s=abcd, p=abq*cd，
-         *    2.2: *匹配1个或多个字符的情况：
-         *          考虑s[i-1]与p[j-1]是否匹配，如果匹配，则看s[i-1]
-         *          与p[j]是否匹配，如果匹配，则看s[i-1]与p[j-1]是否匹配
-         *          如果s[i-1]与p[j-1]不匹配，则看s[i-1]与p[j]是否匹配
+         * 使用动态规划方法， dp[i][j]表示s[i-1]之前字符和p[j-1]之前的内容是否匹配，因为数组下标会-1，所以当前要-1
+         * 1： 如果p[j-1]不是*，那么 s[i-1] == p[j-1] && dp[i][j] = dp[i-1][j-1] ，
+         *    表示当前如果不是*并且当前字符s[i-1]与p[j-1]相同，那就看之前的内容是否也匹配
+         * 2: 如果p[j-1]是*，并且s[i-1]==p[j-2]||p[j-2]='.'那要考虑：
+         *    2.1: *匹配0个字符的情况：这时候s[i-1]与p[j-2]可以不相等！!!
+         *           表示s[i-1]与p[j-2]不匹配，因此p需要再回退一格p[j-3]看看星号和前面一个字符再之前的是否匹配，
+         *          dp[i][j] = dp[i][j-2]
+         *    2.2: *匹配1个字符的情况：
+         *          因为s[i-1]==p[j-2]当前字符已经匹配了，那就各退一格s[i-2],p[j-3]，也就是看前面是否匹配
+         *          dp[i][j] = dp[i-1][j-2]
+         *    2.3: *匹配2个包含以上字符的情况：
+         *         表示p[j-2]这个字符可以出现多次，那么就暂时先拿掉p[j-2]字符的一次，然后与s[i-2]看是否匹配
+         *         比如：s=abbbc, p=ab*c，这里b*本身可以表示出现2以上多次，那我减去一次，他仍然是b*,次数依然是大于等于1的，
+         *         因此只要再比较abb和ab*再比较，s串回退一格，但是p不用仍然保持*.
+         *         dp[i][j] = dp[i-1][j]
          *
-         *   综上：p[j]!='*'时，dp[i][j] = dp[i-1][j-1] && s[i] == p[j]
-         *   p[j]=='*'时，dp[i][j] = dp[i][j-2] || dp[i-1][j] && s[i] == p[j-1]
+         *   综上：p[j]!='*'时，dp[i][j] = dp[i-1][j-1] && s[i-1] == p[j-1]
+         *   p[j]=='*'时，dp[i][j] = dp[i][j-2] || (dp[i-1][j-2] || dp[i-1][j]) && s[i-1] == p[j-2]
          */
         int m = s.length();
         int n = p.length();
         boolean[][] f = new boolean[m + 1][n + 1];
-        f[0][0] = true;
-        // f[m][n]是结果，是推算出来的
+        f[0][0] = true; //如果都为空那肯定就匹配
+        // f[m][n]是结果，是推算出来的，表示的是0-m-1这m个 与 0-n-1这n个之间的字符串是否匹配
+        // i从0开始，是因为0直接利用一次循环，0开头的全为false，代表的是s[-1]
         for (int i = 0; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
                 if (p.charAt(j - 1) == '*'){
+                    // 这一步必须要加，写在前，不然肯定不匹配，但实际上可以先考虑匹配0个字符，
+                    // 因为下面那个判断是已经匹配上了*之前的字符的情况，但实际可以不匹配
                     f[i][j] = f[i][j - 2];
-                    // 如果匹配上了，
+                    // 如果当前字符都匹配上了，
                     if (matches(s, p, i, j - 1)){
-                        // 判断上面是否已经为true，如果是则不变，如果不是再校验f[i - 1][j]
-                        f[i][j] = f[i][j] || f[i - 1][j];
+                        // 判断匹配0,1，>=2三种情况
+                        f[i][j] = f[i][j-2] || f[i-1][j-2] || f[i - 1][j];
                     }
                 }else{
                     if (matches(s, p, i, j)){
@@ -71,13 +83,12 @@ public class tRegexMatch {
                     }
                 }
             }
-            
         }
         return f[m][n];
     }
 
     public static boolean matches(String s, String p, int i, int j){
-        // 因为要判断的是i - 1,所以如果i == 0，则返回false
+        // 因为要判断的是i - 1,比如f[2][3]表示的是f[0-1]与f[0-2]的，下标会-1，因此i为0则返回false,不进行判断也不赋值
         if (i == 0 ){
             return false;
         }
