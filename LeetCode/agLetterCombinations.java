@@ -31,7 +31,7 @@ public class agLetterCombinations {
 
 
     public static List<String> letterCombinations(String digits) {
-        /**
+        /** O(3^m* 4^n)  O(m+n)  其中m是map中对应三个字符的数字，n是4个字符的数字
          * 深度与广度优先思路与时空复杂度都一样，
          * 比如23,2是abc，那就将3对应的字符依次往前面追加，就变成ad,ae,af,bd,be,bf,cd....
          * 如果是234，那就再对之前的每个结果再追加4对应的字符即可
@@ -41,7 +41,7 @@ public class agLetterCombinations {
          */
 
         List<String> result = new ArrayList<>();
-        if (digits.length() == 0){
+        if (digits.isEmpty()){
             return result;
         }
 
@@ -56,6 +56,7 @@ public class agLetterCombinations {
             put('9', "wxyz");
         }};
 
+        // 只需一次调用index=0，后续后续会，adgj,adgk.....bdgj....都会遍历到，因为里面index每次都会+1
         backtrack(result, phoneMap, new StringBuffer(), digits, 0);
 
         return result;
@@ -65,7 +66,7 @@ public class agLetterCombinations {
      * eg: digits = "2345"
      */
     public static void backtrack(List<String> result, Map<Character, String> phoneMap, StringBuffer combination, String digits, int index){
-        // 说明某一轮情况已经遍历完了，比如数字是2345，当前是abcd代表这一轮字符已经有四个了，可以存储了，然后开始下一轮abce
+        // 说明某一轮情况已经遍历完了，比如数字是2345，当前是abcd代表这一轮字符已经有四个了，可以存储了，然后开始下一轮abce，此时不能再走else分支，否则会下标越界
         if (index == digits.length()){
             result.add(combination.toString());
             // 注意必须要加if else，如果if执行了即一遍结束了那就不要执行下面代码了。
