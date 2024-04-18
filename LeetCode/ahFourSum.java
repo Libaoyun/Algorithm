@@ -96,7 +96,6 @@ public class ahFourSum {
                 }
             }
         }
-        System.out.println(4);
         return result;
     }
 }
