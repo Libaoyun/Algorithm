@@ -73,6 +73,7 @@ public class bcMergeKLists {
          * 分治算法基于递归实现，这种结构使得问题可以被分解成更小的、相同或相似的子问题，然后递归地解决这些子问题，
          * 并将其结果组合以获得原问题的解。这种递归结构有助于清晰地表达问题的解法，并可以更容易地进行优化和调试。
          * 比如1~3，下标就是0~2，那么步骤就是0-1(0-0,1-1这两个合并),2-2，在0-1返回的一个链表后再与2进行合并
+         * 总之最后一次会进行最后左右两个合并后返回最终结果
          */
         return merge(lists, 0,  lists.length - 1);
     }
@@ -144,6 +145,7 @@ public class bcMergeKLists {
                 this.ptr = ptr;
             }
 
+            // TODO 重写compareTo方法使其堆排序升序
             public int compareTo(Status status2) {
                 return this.val - status2.val;
             }
