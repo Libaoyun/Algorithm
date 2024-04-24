@@ -14,6 +14,8 @@ import utils.ListNode;
  * 输入：head = [1]
  * 输出：[1]
  */
+
+// TODO 递归就是从尾到头，迭代就是从头到尾
 public class bdSwapPairs {
 
     public static void main(String[] args) {
@@ -41,6 +43,7 @@ public class bdSwapPairs {
          * 方法一：递归
          */
 
+        // 确保还有两个节点是可用的，是可以两两调换的，那就继续递归
         if (head == null || head.next == null) {
             return head;
         }
