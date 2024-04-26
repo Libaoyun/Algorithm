@@ -34,6 +34,7 @@ public class beReverseKGroup {
          * 相关：https://leetcode.cn/problems/reverse-nodes-in-k-group/solutions/10416/tu-jie-kge-yi-zu-fan-zhuan-lian-biao-by-user7208t/
          */
         ListNode dummy = new ListNode(0);
+        dummy.next = head;
         ListNode pre = dummy;
         ListNode end = dummy;
         while(end.next != null){
