@@ -24,14 +24,21 @@ public class CommonUtils {
      * 因此也就是说KMP算法其实是利用了已经已经匹配的公共前缀后缀，从而减少不必要的回退操作进行优化
      */
 
-    public static int[] KMPNextArray(String p){
-        char[] ch = p.toCharArray();
-        int[] next = new int[ch.length+1];
+    public static int[] KMPNextArray(char[] ch){
+        /**
+         * 因为数组是从0开始的，所以代码需要调整如下：
+         */
+//        char[] ch = p.toCharArray();
+        int[] next = new int[ch.length];
         next[0] = 0;
-//        next[1] = 0;
+//        next[1] = 1;
         int i = 1, j = 0;
+//        System.out.println("p=>"+p);
         while (i < ch.length){
-            if (j == 0 || ch[i] == ch[j]){
+//            System.out.println("i="+i+"->"+ch[i]+", j="+j+"->"+ch[j]);
+//            System.out.println(Arrays.toString(next));
+     // 如果j == 0说明要么是第2个字符，也就是刚开始，要么就是回溯到了next[j]=1，然后next[0]=0，也就是前面都没有匹配没有一样的，那就直接给1
+            if (j == 0 || ch[i-1] == ch[j-1]){
                 next[i] = ++j;
                 i++;
             }else {
@@ -39,5 +46,46 @@ public class CommonUtils {
             }
         }
         return next;
+
+
+        /**
+         * 如果1就是第一个字符，那么源代码是
+         char[] ch = p.toCharArray();
+         int[] next = new int[ch.length];
+         next[1] = 0; //next[1] = 0,next[2] = 1,因为这里是以数组从1开始的，忽略next[0]这个元素
+         int i = 1, j = 0;
+         while (i < ch.length){
+         // 如果j == 0说明要么是第2个字符，也就是刚开始，要么就是回溯到了next[j]=1，然后next[1]=0，也就是前面没有一样的，那就直接给1
+             if (j == 0 || ch[i] == ch[j]){
+                next[++i] = ++j;
+             }else {
+                // 如果不匹配就找到next[j]对应的字符重新比较，如果一致那就用当前的j值+1，不重复那就再往前回溯next[j]
+                j = next[j];
+             }
+         }
+         */
+    }
+
+    /**
+     * 前面的方式还还有问题，还得是从1开始计，但数组从0开始，因此在原串和模式串的前缀加上空格然后从一开始即可
+
+     */
+    public static void findNextArray(String p, int[] next) {
+        /**
+         * 因为数组是从0开始的，所以加个空格即可：
+         */
+        char[] ch = (" "+p).toCharArray();
+        next[1] = 0;
+//        next[2] = 1;
+        int i = 1, j = 0;
+        while (i + 1 < ch.length) {
+//            System.out.println("i="+i+"->"+ch[i]+", j="+j+"->"+ch[j]);
+//            System.out.println(Arrays.toString(next));
+            if (j == 0 || ch[i] == ch[j]) {
+                next[++i] = ++j;
+            } else {
+                j = next[j];
+            }
+        }
     }
 }
