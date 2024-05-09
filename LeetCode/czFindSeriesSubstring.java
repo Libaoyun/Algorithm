@@ -32,7 +32,7 @@ public class czFindSeriesSubstring {
     }
 
 
-    /**
+    /** O(sLen×wordLen)--s串长*单词长   O(wordLen*wdsLen)--单词长*单词个数
      * 本题思路与 第438.找到字符串中所有字母异位词 的方法二基本一致
      * 这里没有abc-z这样的26个字母，因此是将每wordLen个字符分为一组类比为异位词的一个字母，然后分为wdsLen组类比为一个异位词
      * 这里也将异位词解法diff即不同字符差异数量，换了一种思路，改成了用一个map来存储所有遇到过的wordLen长度单词，
@@ -72,7 +72,7 @@ public class czFindSeriesSubstring {
                 result.add(i);
             }
             /**
-             * 注意下面这个循环和之前438题不一样，这里为了避免下标越界，实际用的是先定位到当前单词，然后再滑动(也就是加减)
+             * 注意下面这个循环和之前438题不一样，这里为了避免下标越界，实际用的是先定位到当前单词，然后再滑动(即加减)
              * 从而最终result也只要用start而不是start+1。仔细看这里start直接从第二个单词作为起始位置，
              * 因为第一个前面已经在最初赋值时候就完成判断了，然后从第二个开始，再进行滑动上一轮的指针，
              * 这样在滑动右指针时就只要(start+wordLen*wdsLen - wordLen, start+wordLen*wdsLen)
