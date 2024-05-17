@@ -56,6 +56,7 @@ public class ccSearchRotateSortArray {
             // TODO 这里必须要包含等于，因为如果数组长度就2，那么左半就是0-0，肯定是有序，所以要包含
             if (nums[0] <= nums[mid]){
                 // mid左半有序 且 如果目标值就在mid左半，这里target <= nums[mid]加不加等于都可以，因为前面最开始就判断了
+                // 这里的左端点nums[0]或者nums[left]也都一样符合
                 if (target >= nums[0] && target < nums[mid]){
                     right = mid - 1;
                 }
@@ -67,7 +68,7 @@ public class ccSearchRotateSortArray {
             // TODO 宗旨就是利用有序的那部分来查找，如果不在有序那一侧，那就往另一侧继续二分，原理和正常的二分一样
             // mid左半无序，即右半有序
             else {
-                // mid右半有序 且 如果目标值就在mid右半。这里同样也要到端点，即nums[len - 1]
+                // mid右半有序 且 如果目标值就在mid右半。这里端点可以是nums[len - 1]也可以是nums[right]都符合
                 if (target > nums[mid] && target <= nums[len - 1]){
                     left = mid + 1;
                 }
