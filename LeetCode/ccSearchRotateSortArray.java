@@ -52,15 +52,15 @@ public class ccSearchRotateSortArray {
                 return mid;
             }
 
-            // mid左半有序，这里一定要从0-mid，虽然可能看起来有些冗余，但事实上不影响left和right的继续二分，仅判断是否有序
+            // mid左半有序，这里从0-mid那么内部也要从[0-mid]区间判断，要么就都left替换0，不影响left和right的继续二分，仅判断是否有序
             // TODO 这里必须要包含等于，因为如果数组长度就2，那么左半就是0-0，肯定是有序，所以要包含
             if (nums[0] <= nums[mid]){
                 // mid左半有序 且 如果目标值就在mid左半，这里target <= nums[mid]加不加等于都可以，因为前面最开始就判断了
-                // 这里的左端点nums[0]或者nums[left]也都一样符合
+                // 这里的左端点nums[0]或者nums[left]也都一样符合，前提是上面if是0开始
                 if (target >= nums[0] && target < nums[mid]){
                     right = mid - 1;
                 }
-                // mid左半有序 但 目标值不在mid左半部分，就将left移到mid+1位置
+                // mid左半有序 但 目标值不在mid左半部分，就将left移到mid+1位置，下次从右半找
                 else {
                     left = mid + 1;
                 }
@@ -81,7 +81,9 @@ public class ccSearchRotateSortArray {
 
         return -1;
 
-        // TODO 也就是说，其实只要是有序分为了两部分，也不影响二分查找，因为要么左边有序要么右边有序，每次二分后还是一样要么左边要么右边
+        // TODO 也就是说，其实只要是有序分为了两部分，也不影响二分查找，因为要么左边有序要么右边有序，
+        //  正常的二分是判断mid是否比目标值大或小，反之调整区间，而这里是判断是否在有序一侧，原理一样。每次二分后还是一样要么左边要么右边
         //  然后如果不在有序的那一边，那就将left或者right进行相应调整继续二分
+
     }
 }

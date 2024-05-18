@@ -52,6 +52,7 @@ public class ceSearchInsertIndex {
                 left = mid + 1;
             }
         }
+        // TODO 这里就相当于： target < mid < target，即如果mid<target，那么target就要在mid右边，否则返回mid下标，因为mid会作为target后一位
         if (nums[mid] < target){
             return mid + 1;
         }else {
