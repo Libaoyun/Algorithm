@@ -3,7 +3,7 @@ package utils;
 import java.util.Arrays;
 
 /**
- *
+ *  KMP模式串匹配相关，求解next数组
  */
 
 

@@ -1,7 +1,7 @@
 package utils;
 
 /**
- * @Describe:
+ * @Describe:  模拟链表节点类
  * @Author: LiBaoYun
  * @Date: 2024-04-23 9:50
  */
